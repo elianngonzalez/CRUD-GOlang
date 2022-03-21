@@ -5,22 +5,25 @@
 	<div class="card-header">
 		Empleados
 	</div>
+    {{range.}}
 	<div class="card-body">
 		<form action="/insertar" method="post">
 			<div class="form-group">
 				<label for="">nombre</label>
-				<input type="text" class="form-control" name="nombre" id="nombre" aria-describedby="helpId" placeholder="nombre">
+				<input type="text" class="form-control" name="nombre" id="nombre" aria-describedby="helpId" placeholder="{{.Nombre}}">
 				<small id="helpId" class="form-text text-muted">escribe tu nombre</small>
 			</div>
 			<div class="form-group">
 				<label for="">Correo</label>
-				<input type="email" class="form-control" name="correo" id="correo" aria-describedby="helpId" placeholder="ejemplo@gmail.com">
+				<input type="email" class="form-control" name="correo" id="correo" aria-describedby="helpId" placeholder="{{.Correo}}">
 				<small id="helpId" class="form-text text-muted">escribe tu correo</small>
 			</div>
 
-			<button type="submit" class="btn btn-primary">agregar nuevo empleado</button>
+			<button type="submit" class="btn btn-primary">editar empleado</button>
+            <a class="btn btn-danger" href="/" role="button">cancelar</a>
 		</form>
 	</div>
+    {{end}}
 </div>
 
 {{template "footer"}}

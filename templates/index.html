@@ -18,16 +18,20 @@
             </tr>
         </thead>
         <tbody>
+
+        {{ range. }}
             <tr>
-                <td>1</td>
-                <td>elian</td>
-                <td>elian@gmail</td>
+                <td>{{.Id}}</td>
+                <td>{{.Nombre}}</td>
+                <td>{{.Correo}}</td>
                 <td>
-                    <a href="/editar/1" class="btn btn-primary">editar</a>
-                    <a href="/eliminar/1" class="btn btn-danger">eliminar</a>
+                    <a href="/editar?id={{.Id}}" class="btn btn-primary">editar</a>
+                    <a href="/eliminar?id={{.Id}}" class="btn btn-danger">eliminar</a>
                 </td>
             </tr>
-        </tbody>
+        {{ end }}
+        
+    </tbody>
     </table>    
 
 </div>
