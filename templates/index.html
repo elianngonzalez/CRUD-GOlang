@@ -1,0 +1,36 @@
+{{define "index"}}
+
+{{template "header"}}
+
+
+
+<div class="container">
+
+<a name="" id="" class="btn btn-primary" href="/crear" role="button">agregar empleado</a>
+
+<table class="table">
+        <thead>
+            <tr>
+                <th>id</th>
+                <th>name</th>
+                <th>email</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>elian</td>
+                <td>elian@gmail</td>
+                <td>
+                    <a href="/editar/1" class="btn btn-primary">editar</a>
+                    <a href="/eliminar/1" class="btn btn-danger">eliminar</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>    
+
+</div>
+
+{{template "footer"}}
+{{end}}
