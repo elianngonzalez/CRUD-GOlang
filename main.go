@@ -29,7 +29,9 @@ func main() {
 	http.HandleFunc("/", Index)
 	http.HandleFunc("/crear", Crear)
 	http.HandleFunc("/insertar", Insertar)
-	http.HandleFunc("/editar/{id}", Editar)
+
+	http.HandleFunc("/editar", Editar)
+	http.HandleFunc("/borrar", Borrar)
 
 	log.Println("Listening on port" + Port)
 	http.ListenAndServe(Port, nil)
@@ -39,6 +41,17 @@ type Empleado struct {
 	Id     int
 	Nombre string
 	Correo string
+}
+
+func Borrar(w http.ResponseWriter, r *http.Request) {
+	id := r.URL.Query().Get("id")
+	conEstablecida := conexDB()
+	conRegistros, err := conEstablecida.Prepare("DELETE FROM empleados WHERE id=?")
+	if err != nil {
+		panic(err.Error())
+	}
+	conRegistros.Exec(id)
+	http.Redirect(w, r, "/", 301)
 }
 
 func Index(w http.ResponseWriter, r *http.Request) {
@@ -68,7 +81,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 		empleadosLista = append(empleadosLista, empleado)
 	}
 
-	log.Println(empleadosLista)
+	//log.Println(empleadosLista)
 
 	templates.ExecuteTemplate(w, "index", empleadosLista)
 }
