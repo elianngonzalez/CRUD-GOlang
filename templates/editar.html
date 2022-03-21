@@ -1,29 +1,35 @@
-{{define "crear"}}
+{{define "editar"}}
 {{template "header"}}
 
 <div class="card">
+	{{range.}}
 	<div class="card-header">
-		Empleados
+		Editar
 	</div>
-    {{range.}}
 	<div class="card-body">
-		<form action="/insertar" method="post">
+		<form action="/actualizar" method="post">
+			<div class="form-group">
+				<label for=""> empleado N° </label>
+				<input type="text" class="form-control" id="id" name="id" value="{{.Id}}" readonly>
+			</div>
 			<div class="form-group">
 				<label for="">nombre</label>
-				<input type="text" class="form-control" name="nombre" id="nombre" aria-describedby="helpId" placeholder="{{.Nombre}}">
+				<input type="text" class="form-control" name="nombre" id="nombre" aria-describedby="helpId"
+					value="{{.Nombre}}">
 				<small id="helpId" class="form-text text-muted">escribe tu nombre</small>
 			</div>
 			<div class="form-group">
 				<label for="">Correo</label>
-				<input type="email" class="form-control" name="correo" id="correo" aria-describedby="helpId" placeholder="{{.Correo}}">
+				<input type="email" class="form-control" name="correo" id="correo" aria-describedby="helpId"
+					value="{{.Correo}}">
 				<small id="helpId" class="form-text text-muted">escribe tu correo</small>
 			</div>
 
 			<button type="submit" class="btn btn-primary">editar empleado</button>
-            <a class="btn btn-danger" href="/" role="button">cancelar</a>
+			<a class="btn btn-danger" href="/" role="button">cancelar</a>
 		</form>
 	</div>
-    {{end}}
+	{{end}}
 </div>
 
 {{template "footer"}}

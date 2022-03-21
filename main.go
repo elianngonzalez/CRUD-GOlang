@@ -22,19 +22,23 @@ func conexDB() (conexion *sql.DB) {
 	return conexion
 }
 
-var Port = ":3000"
+var Puerto = ":3000"
 var templates = template.Must(template.ParseGlob("templates/*"))
 
 func main() {
+	//rutas
 	http.HandleFunc("/", Index)
 	http.HandleFunc("/crear", Crear)
 	http.HandleFunc("/insertar", Insertar)
 
 	http.HandleFunc("/editar", Editar)
+	http.HandleFunc("/actualizar", Actualizar)
+
 	http.HandleFunc("/borrar", Borrar)
 
-	log.Println("Listening on port" + Port)
-	http.ListenAndServe(Port, nil)
+	log.Println("Listening on port" + Puerto)
+
+	http.ListenAndServe(Puerto, nil)
 }
 
 type Empleado struct {
@@ -110,42 +114,46 @@ func Insertar(w http.ResponseWriter, r *http.Request) {
 func Editar(w http.ResponseWriter, r *http.Request) {
 
 	id := r.URL.Query().Get("id")
-	nombre := r.FormValue("nombre")
-	correo := r.FormValue("correo")
-	conEstablecida := conexDB()
+	empleadoEdit := Empleado{}
+	datalist := []Empleado{}
 
-	if r.Method == "get" {
-		consulta, err := conEstablecida.Query("SELECT * FROM empleados WHERE id=?", id)
+	conEstablecida := conexDB()
+	consulta, err := conEstablecida.Query("SELECT * FROM empleados WHERE id=?", id)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	for consulta.Next() {
+		var id int
+		var nombre, correo string
+
+		err = consulta.Scan(&id, &nombre, &correo)
 		if err != nil {
 			panic(err.Error())
 		}
 
-		empleado := Empleado{}
+		empleadoEdit.Id = id
+		empleadoEdit.Nombre = nombre
+		empleadoEdit.Correo = correo
 
-		for consulta.Next() {
-			var id int
-			var nombre, correo string
-
-			err = consulta.Scan(&id, &nombre, &correo)
-			if err != nil {
-				panic(err.Error())
-			}
-
-			empleado.Id = id
-			empleado.Nombre = nombre
-			empleado.Correo = correo
-		}
-
-		if r.Method == "post" {
-			conRegistros, err := conEstablecida.Prepare("UPDATE empleados SET nombre=?, correo=? WHERE id=?")
-			if err != nil {
-				panic(err.Error())
-			}
-			conRegistros.Exec(nombre, correo, id)
-			http.Redirect(w, r, "/", 301)
-		}
-
-		templates.ExecuteTemplate(w, "editar", empleado)
+		datalist = append(datalist, empleadoEdit)
 	}
 
+	templates.ExecuteTemplate(w, "editar", datalist)
+}
+
+func Actualizar(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "POST" {
+		id := r.FormValue("id")
+		nombre := r.FormValue("nombre")
+		correo := r.FormValue("correo")
+
+		conEstablecida := conexDB()
+		conRegistros, err := conEstablecida.Prepare("UPDATE empleados SET nombre=?, correo=? WHERE id=?")
+		if err != nil {
+			panic(err.Error())
+		}
+		conRegistros.Exec(nombre, correo, id)
+		http.Redirect(w, r, "/", 301)
+	}
 }
